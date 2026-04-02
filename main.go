@@ -44,18 +44,16 @@ func main() {
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	fmt.Fprint(w, `<!DOCTYPE html>
+const htmlPage = `<!DOCTYPE html>
 <html>
 <head>
     <title>Weather App</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; color: white; }
+        body { font-family: -apple-system, sans-serif; background: linear-gradient(135deg, #667eea 0%%, #764ba2 100%%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; color: white; }
         h1 { font-size: 2.5em; margin-bottom: 10px; }
         p.sub { opacity: 0.8; margin-bottom: 30px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1200px; width: 100%; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1200px; width: 100%%; }
         .card { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 16px; padding: 24px; transition: transform 0.2s; }
         .card:hover { transform: translateY(-4px); }
         .city { font-size: 1.3em; font-weight: 600; }
@@ -71,25 +69,28 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
     <div class="grid" id="cards"></div>
     <footer>Built by Joyson Fernandes | Go + GitHub Actions + K8s</footer>
     <script>
-        fetch('/api/cities').then(r=>r.json()).then(cities=>{
-            cities.forEach(c=>{
-                fetch('/api/weather/'+c).then(r=>r.json()).then(w=>{
-                    document.getElementById('cards').innerHTML += `
-                        <div class="card">
-                            <div class="city">${w.location}</div>
-                            <div class="temp">${w.temperature}°C</div>
-                            <span class="condition">${w.condition}</span>
-                            <div class="details">
-                                <span>Humidity: ${w.humidity}%</span>
-                                <span>Wind: ${w.wind} km/h</span>
-                            </div>
-                        </div>`;
+        fetch('/api/cities').then(function(r){return r.json()}).then(function(cities){
+            cities.forEach(function(c){
+                fetch('/api/weather/'+c).then(function(r){return r.json()}).then(function(w){
+                    var card = '<div class="card">';
+                    card += '<div class="city">'+w.location+'</div>';
+                    card += '<div class="temp">'+w.temperature+'\u00B0C</div>';
+                    card += '<span class="condition">'+w.condition+'</span>';
+                    card += '<div class="details">';
+                    card += '<span>Humidity: '+w.humidity+'%%</span>';
+                    card += '<span>Wind: '+w.wind+' km/h</span>';
+                    card += '</div></div>';
+                    document.getElementById('cards').innerHTML += card;
                 });
             });
         });
     </script>
 </body>
-</html>`)
+</html>`
+
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprint(w, htmlPage)
 }
 
 func weatherHandler(w http.ResponseWriter, r *http.Request) {
