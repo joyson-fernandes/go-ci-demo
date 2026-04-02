@@ -1,28 +1,51 @@
 package main
 
-import "testing"
+import (
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+)
 
-func TestGreet(t *testing.T) {
-	got := Greet("Joyson")
-	want := "Hello, Joyson!"
-	if got != want {
-		t.Errorf("Greet() = %q, want %q", got, want)
+func TestHealthHandler(t *testing.T) {
+	req := httptest.NewRequest("GET", "/healthz", nil)
+	w := httptest.NewRecorder()
+	healthHandler(w, req)
+	if w.Code != http.StatusOK {
+		t.Errorf("health check returned %d, want 200", w.Code)
 	}
 }
 
-func TestAdd(t *testing.T) {
-	tests := []struct {
-		a, b, want int
-	}{
-		{1, 2, 3},
-		{0, 0, 0},
-		{-1, 1, 0},
-		{100, 200, 300},
+func TestWeatherHandler(t *testing.T) {
+	req := httptest.NewRequest("GET", "/api/weather/london", nil)
+	w := httptest.NewRecorder()
+	weatherHandler(w, req)
+	if w.Code != http.StatusOK {
+		t.Errorf("weather returned %d, want 200", w.Code)
 	}
-	for _, tt := range tests {
-		got := Add(tt.a, tt.b)
-		if got != tt.want {
-			t.Errorf("Add(%d, %d) = %d, want %d", tt.a, tt.b, got, tt.want)
-		}
+	var resp WeatherResponse
+	json.NewDecoder(w.Body).Decode(&resp)
+	if resp.Location != "London, UK" {
+		t.Errorf("location = %q, want London, UK", resp.Location)
+	}
+}
+
+func TestWeatherNotFound(t *testing.T) {
+	req := httptest.NewRequest("GET", "/api/weather/atlantis", nil)
+	w := httptest.NewRecorder()
+	weatherHandler(w, req)
+	if w.Code != http.StatusNotFound {
+		t.Errorf("unknown city returned %d, want 404", w.Code)
+	}
+}
+
+func TestCitiesHandler(t *testing.T) {
+	req := httptest.NewRequest("GET", "/api/cities", nil)
+	w := httptest.NewRecorder()
+	citiesHandler(w, req)
+	var cities []string
+	json.NewDecoder(w.Body).Decode(&cities)
+	if len(cities) != 8 {
+		t.Errorf("got %d cities, want 8", len(cities))
 	}
 }
