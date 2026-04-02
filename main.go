@@ -118,3 +118,20 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, "ok")
 }
+
+func getIcon(condition string) string {
+	icons := map[string]string{
+		"Sunny":         "☀️",
+		"Cloudy":        "☁️",
+		"Partly Cloudy": "⛅",
+		"Clear":         "🌞",
+		"Rainy":         "🌧️",
+		"Humid":         "💧",
+		"Overcast":      "🌥️",
+		"Thunderstorm":  "⛈️",
+	}
+	if icon, ok := icons[condition]; ok {
+		return icon
+	}
+	return "🌡️"
+}
