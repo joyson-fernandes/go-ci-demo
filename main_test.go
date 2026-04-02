@@ -49,3 +49,20 @@ func TestCitiesHandler(t *testing.T) {
 		t.Errorf("got %d cities, want 8", len(cities))
 	}
 }
+
+func TestGetIcon(t *testing.T) {
+	tests := []struct {
+		condition string
+		want      string
+	}{
+		{"Sunny", "☀️"},
+		{"Rainy", "🌧️"},
+		{"Unknown", "🌡️"},
+	}
+	for _, tt := range tests {
+		got := getIcon(tt.condition)
+		if got != tt.want {
+			t.Errorf("getIcon(%q) = %q, want %q", tt.condition, got, tt.want)
+		}
+	}
+}
