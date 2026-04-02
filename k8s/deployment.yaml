@@ -5,6 +5,8 @@ metadata:
   namespace: default
   labels:
     app: weather-app
+    team: platform
+    env: production
 spec:
   replicas: 1
   selector:
@@ -14,6 +16,8 @@ spec:
     metadata:
       labels:
         app: weather-app
+        team: platform
+        env: production
     spec:
       containers:
       - name: weather-app
