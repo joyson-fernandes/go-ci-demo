@@ -50,10 +50,10 @@ const htmlPage = `<!DOCTYPE html>
     <title>Weather App</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, sans-serif; background: linear-gradient(135deg, #667eea 0%%, #764ba2 100%%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; color: white; }
+        body { font-family: -apple-system, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; color: white; }
         h1 { font-size: 2.5em; margin-bottom: 10px; }
         p.sub { opacity: 0.8; margin-bottom: 30px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1200px; width: 100%%; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1200px; width: 100%; }
         .card { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 16px; padding: 24px; transition: transform 0.2s; }
         .card:hover { transform: translateY(-4px); }
         .city { font-size: 1.3em; font-weight: 600; }
@@ -77,7 +77,7 @@ const htmlPage = `<!DOCTYPE html>
                     card += '<div class="temp">'+w.temperature+'\u00B0C</div>';
                     card += '<span class="condition">'+w.condition+'</span>';
                     card += '<div class="details">';
-                    card += '<span>Humidity: '+w.humidity+'%%</span>';
+                    card += '<span>Humidity: '+w.humidity+'%</span>';
                     card += '<span>Wind: '+w.wind+' km/h</span>';
                     card += '</div></div>';
                     document.getElementById('cards').innerHTML += card;
